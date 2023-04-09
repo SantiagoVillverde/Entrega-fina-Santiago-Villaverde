@@ -1,0 +1,73 @@
+import React, { createContext, useState, useContext } from "react";
+
+export const Context = createContext();
+
+export const useCart = () => {
+  return useContext(Context);
+};
+
+export function ContextProvider({ children }) {
+  const [cart, setCart] = useState([]);
+  console.log(cart);
+  const [cartQuantity, setCartQuantity] = useState(0);
+
+  const isInCart = (producto) => cart.some((esta) => esta.id === producto.id);
+  
+
+  const onAdd = (producto, cantidad) => {
+    const isAlredyAdded = isInCart(producto);
+
+    if (isAlredyAdded) {
+      const modifyProduct = cart.find((cart) => cart.id === producto.id);
+      const addedProduct = {
+        ...modifyProduct,
+        cantidad: modifyProduct.cantidad + cantidad,
+      };
+
+      setCart((prevState) =>
+        prevState.map((cart) =>
+          cart.id === producto.id ? addedProduct : cart
+        )
+      );
+    } else {
+      if (cantidad <= producto.stock) {
+      setCart((prevState) => prevState.concat({ ...producto, cantidad }));
+      } else {
+        window.alert(`El stock es de ${producto.stock} unidades`)
+      }}
+  };
+
+  const onRemove = (id) => {
+    setCart(cart.filter(prod => prod.id !== id))
+  };
+
+  const removeAll = () => {
+    setCart([]);
+    setCartQuantity(0);
+  };
+
+  const getQuantity = () => {
+    let cant = 0
+    cart.forEach((e) => cant += e.cantidad)
+    return cant
+};
+
+  
+  const contextValue = {
+    productos: cart,
+    cantidad: cartQuantity,
+    onAdd,
+    onRemove,
+    removeAll,
+    getQuantity,
+    
+  };
+
+  return (
+    <>
+      <Context.Provider value={contextValue}>{children}</Context.Provider>
+    </>
+  );
+}
+
+export default ContextProvider;

@@ -1,0 +1,15 @@
+.addRemove-Button {
+  display:flex;
+  align-items: center;
+  color: #000000;
+  font-weight: bold;
+  
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.addRemove-button:hover {
+  background-color: #f0b030;
+}
